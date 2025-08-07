@@ -2,6 +2,7 @@
 
 	using UnityEngine;
 	using System.Collections;
+	using UnityEngine.InputSystem;
 
 	public class DragCamera : MonoBehaviour {
 		Vector3 anchor;
@@ -11,7 +12,7 @@
 		float lastClick;
 
 		void LateUpdate () {
-			if (Input.GetMouseButtonDown(0)) {
+			if (Mouse.current.leftButton.wasPressedThisFrame) {
 				float time = Time.time;
 				if (time - lastClick < 0.3f) {
 					zoomed = !zoomed;
@@ -22,16 +23,18 @@
 				}
 				lastClick = time;
 				dragging = true;
-				anchor = Input.mousePosition;
+				anchor = Mouse.current.position.ReadValue();
 				origin = Camera.main.transform.position;
 			}
-			if (Input.GetMouseButtonUp(0)) {
+			if (Mouse.current.leftButton.wasReleasedThisFrame) {
 				dragging = false;
 			}
 			if (dragging) {
-				Vector3 delta = Camera.main.ScreenToWorldPoint(Input.mousePosition - anchor 
-						- new Vector3(-Screen.width / 2, -Screen.height / 2, Camera.main.transform.position.z)) 
-						- new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, 0);
+				Vector3 mousePos = Mouse.current.position.ReadValue();
+				Vector3 delta = Camera.main.ScreenToWorldPoint(mousePos - anchor
+				                - new Vector3(-Screen.width / 2f, -Screen.height / 2f, Camera.main.transform.position.z))
+				                - new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, 0);
+
 				Camera.main.transform.position = origin - delta;
 			}
 		}
