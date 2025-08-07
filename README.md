@@ -1,3 +1,19 @@
+## ⚠️ Notice
+
+This repository is a **personal fork** of the original [all-iver/shapes2d](https://github.com/all-iver/shapes2d) project.
+
+The original Shapes2D project is no longer actively maintained.  
+This fork is maintained by [mingos](https://github.com/mingos) for **Unity 6.1 LTS** and newer, and may include custom updates such as:
+
+- Migration to the new Input System
+- Compatibility fixes for modern Unity versions
+- Additional utilities and minor improvements
+
+> **Note:** This fork is not affiliated with or maintained by the original author.
+
+---
+
+
 <img src="http://sub-c.org/Shapes2D/documentation/_images/logo.png" width="506" height="140" alt="Shapes2D logo" />
 
 **Shapes2D** is a Unity asset for easily creating art assets in the Unity editor. You can use Shapes2D for creating PNG sprites, prototyping, game jams, UI, effects and more.
