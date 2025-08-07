@@ -1,7 +1,7 @@
 ﻿namespace Shapes2D {
     
     using UnityEngine;
-    using System.Collections;
+    using UnityEngine.InputSystem;
 
     public class InputUtils {
 
@@ -10,50 +10,40 @@
                     -Camera.main.transform.position.z);
             return Camera.main.ScreenToWorldPoint(pos);
         }
-        
-        static bool WasMouseDown(int button) {
-            return Input.GetMouseButtonDown(button);
-        }
-        
-        static bool WasFingerDown() {
-            foreach (Touch t in Input.touches) {
-                if (t.phase == TouchPhase.Began)
-                    return true;
-            }
-            return false;
-        }
 
-        static Vector2 FirstTouchPosition() {
-            foreach (Touch t in Input.touches) {
-                if (t.phase == TouchPhase.Began || t.phase == TouchPhase.Moved 
-                        || t.phase == TouchPhase.Stationary)
-                    return t.position;
-            }
-            throw new System.InvalidOperationException("No touch exists.");
-        }
 
         public static bool MouseDownOrTap() {
-            #pragma warning disable 0162
-            #if UNITY_EDITOR
-                return WasMouseDown(0);
-            #endif
-            #if UNITY_IPHONE || UNITY_ANDROID
-                return WasFingerDown();
-            #endif
-            return WasMouseDown(0);
-            #pragma warning restore 0162
+            if (Mouse.current?.leftButton.wasPressedThisFrame == true)
+                return true;
+
+            if (Touchscreen.current != null)
+            {
+                foreach (var touch in Touchscreen.current.touches)
+                {
+                    if (touch.press.wasPressedThisFrame)
+                        return true;
+                }
+            }
+
+            return false;
         }
         
         public static Vector2 MouseOrTapPosition() {
-            #pragma warning disable 0162
-            #if UNITY_EDITOR
-                return Input.mousePosition;
-            #endif
-            #if UNITY_IPHONE || UNITY_ANDROID
-                return FirstTouchPosition();
-            #endif
-            return Input.mousePosition;
-            #pragma warning restore 0162
+            if (Touchscreen.current != null)
+            {
+                foreach (var touch in Touchscreen.current.touches)
+                {
+                    if (touch.press.isPressed)
+                        return touch.position.ReadValue();
+                }
+            }
+
+            if (Mouse.current != null)
+            {
+                return Mouse.current.position.ReadValue();
+            }
+
+            return Vector2.zero;
         }
 
     }
